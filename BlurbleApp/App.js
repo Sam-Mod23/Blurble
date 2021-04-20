@@ -3,11 +3,21 @@ import { Button, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
-function DetailsScreen() {
+function DetailsScreen({ navigation }) {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Details!</Text>
+      <Button title="Go to Info" onPress={() => navigation.navigate("Info")} />
+    </View>
+  );
+}
+
+function InfoScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Info!</Text>
     </View>
   );
 }
@@ -16,6 +26,18 @@ function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Home screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate("Details")}
+      />
+    </View>
+  );
+}
+
+function ClubsScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>Clubs screen</Text>
       <Button
         title="Go to Details"
         onPress={() => navigation.navigate("Details")}
@@ -36,6 +58,16 @@ function SettingsScreen({ navigation }) {
   );
 }
 
+const DetailsStack = createStackNavigator();
+function DetailsStackScreen() {
+  return (
+    <DetailsStack.Navigator>
+      <DetailsStack.Screen name="Details" component={DetailsScreen} />
+      <DetailsStack.Screen name="Info" component={InfoScreen} />
+    </DetailsStack.Navigator>
+  );
+}
+
 const HomeStack = createStackNavigator();
 
 function HomeStackScreen() {
@@ -43,6 +75,7 @@ function HomeStackScreen() {
     <HomeStack.Navigator>
       <HomeStack.Screen name="Home" component={HomeScreen} />
       <HomeStack.Screen name="Details" component={DetailsScreen} />
+      <HomeStack.Screen name="Info" component={InfoScreen} />
     </HomeStack.Navigator>
   );
 }
@@ -58,12 +91,44 @@ function SettingsStackScreen() {
   );
 }
 
+const ClubSearchStack = createStackNavigator();
+
+function ClubSearchStackScreen() {
+  return (
+    <ClubSearchStack.Navigator>
+      <ClubSearchStack.Screen name="Clubs" component={ClubsScreen} />
+      <ClubSearchStack.Screen name="Details" component={DetailsScreen} />
+    </ClubSearchStack.Navigator>
+  );
+}
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === "Home") {
+              iconName = focused ? "home" : "home-outline";
+            } else if (route.name === "Settings") {
+              iconName = focused ? "person" : "person-outline";
+            } else if (route.name === "Clubs") {
+              iconName = focused ? "library" : "library-outline";
+            }
+
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: "tomato",
+          inactiveTintColor: "gray",
+        }}
+      >
+        <Tab.Screen name="Clubs" component={ClubSearchStackScreen} />
         <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="Settings" component={SettingsStackScreen} />
       </Tab.Navigator>
