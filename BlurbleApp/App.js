@@ -46,10 +46,10 @@ function ClubsScreen({ navigation }) {
   );
 }
 
-function SettingsScreen({ navigation }) {
+function ProfileScreen({ navigation }) {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Settings screen</Text>
+      <Text>Profile screen</Text>
       <Button
         title="Go to Details"
         onPress={() => navigation.navigate("Details")}
@@ -73,21 +73,43 @@ const HomeStack = createStackNavigator();
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          title: "Blurble",
+          headerStyle: {
+            backgroundColor: "#2F2F2F",
+          },
+          headerTintColor: "#EDEDF4",
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: 25,
+          },
+          headerRight: () => (
+            <Button
+              onPress={() => alert("This is a button!")}
+              title="icon"
+              color="black"
+            ></Button>
+          ),
+        }}
+      />
       <HomeStack.Screen name="Details" component={DetailsScreen} />
       <HomeStack.Screen name="Info" component={InfoScreen} />
     </HomeStack.Navigator>
   );
 }
 
-const SettingsStack = createStackNavigator();
+const ProfileStack = createStackNavigator();
 
-function SettingsStackScreen() {
+function ProfileStackScreen() {
   return (
-    <SettingsStack.Navigator>
-      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      <SettingsStack.Screen name="Details" component={DetailsScreen} />
-    </SettingsStack.Navigator>
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+      <ProfileStack.Screen name="Details" component={DetailsScreen} />
+      <ProfileStack.Screen name="Info" component={InfoScreen} />
+    </ProfileStack.Navigator>
   );
 }
 
@@ -98,6 +120,7 @@ function ClubSearchStackScreen() {
     <ClubSearchStack.Navigator>
       <ClubSearchStack.Screen name="Clubs" component={ClubsScreen} />
       <ClubSearchStack.Screen name="Details" component={DetailsScreen} />
+      <ClubSearchStack.Screen name="Info" component={InfoScreen} />
     </ClubSearchStack.Navigator>
   );
 }
@@ -113,8 +136,8 @@ export default function App() {
             let iconName;
 
             if (route.name === "Home") {
-              iconName = focused ? "home" : "home-outline";
-            } else if (route.name === "Settings") {
+              iconName = focused ? "book" : "book-outline";
+            } else if (route.name === "Profile") {
               iconName = focused ? "person" : "person-outline";
             } else if (route.name === "Clubs") {
               iconName = focused ? "library" : "library-outline";
@@ -124,13 +147,13 @@ export default function App() {
           },
         })}
         tabBarOptions={{
-          activeTintColor: "tomato",
-          inactiveTintColor: "gray",
+          activeTintColor: "#c97064",
+          inactiveTintColor: "#2f2f2f",
         }}
       >
         <Tab.Screen name="Clubs" component={ClubSearchStackScreen} />
         <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="Settings" component={SettingsStackScreen} />
+        <Tab.Screen name="Profile" component={ProfileStackScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
