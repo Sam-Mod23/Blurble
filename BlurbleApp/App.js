@@ -11,8 +11,6 @@ import {
 
 const Tab = createBottomTabNavigator();
 
-const testUser = "User1";
-
 export default function App() {
   return (
     <NavigationContainer>
@@ -40,9 +38,7 @@ export default function App() {
         }}
       >
         <Tab.Screen name="Clubs" component={ClubSearchStackScreen} />
-        <Tab.Screen name="Home">
-          {(props) => <HomeStackScreen {...props} user={testUser} />}
-        </Tab.Screen>
+        <Tab.Screen name="Home" component={HomeStackScreen} />
         <Tab.Screen name="Profile" component={ProfileStackScreen} />
       </Tab.Navigator>
     </NavigationContainer>

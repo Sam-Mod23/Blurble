@@ -24,9 +24,7 @@ const headerOptions = {
 
 const HomeStack = createStackNavigator();
 
-function HomeStackScreen(props) {
-  const { user } = props;
-  console.log(user, "user in Home stack");
+function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -51,14 +49,9 @@ function HomeStackScreen(props) {
       />
       <HomeStack.Screen
         name="BookSubmit"
-        // component={BookSubmitScreen}
-        // myProp="Hello"
+        component={BookSubmitScreen}
         options={{ title: "Choose Book", ...headerOptions }}
-      >
-        {(props) => {
-          return <BookSubmitScreen {...props} user={user} />;
-        }}
-      </HomeStack.Screen>
+      />
       <HomeStack.Screen
         name="BookInfo"
         component={BookInfoScreen}
