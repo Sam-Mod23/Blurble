@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {
@@ -24,7 +24,9 @@ const headerOptions = {
 
 const HomeStack = createStackNavigator();
 
-function HomeStackScreen() {
+function HomeStackScreen(props) {
+  const { user } = props;
+  console.log(user, "user in Home stack");
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -49,9 +51,14 @@ function HomeStackScreen() {
       />
       <HomeStack.Screen
         name="BookSubmit"
-        component={BookSubmitScreen}
+        // component={BookSubmitScreen}
+        // myProp="Hello"
         options={{ title: "Choose Book", ...headerOptions }}
-      />
+      >
+        {(props) => {
+          return <BookSubmitScreen {...props} user={user} />;
+        }}
+      </HomeStack.Screen>
       <HomeStack.Screen
         name="BookInfo"
         component={BookInfoScreen}

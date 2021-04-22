@@ -1,4 +1,5 @@
 import * as React from "react";
+import { userContext } from "./userContext";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -9,6 +10,8 @@ import {
 } from "./Stacks";
 
 const Tab = createBottomTabNavigator();
+
+const testUser = "User1";
 
 export default function App() {
   return (
@@ -37,7 +40,9 @@ export default function App() {
         }}
       >
         <Tab.Screen name="Clubs" component={ClubSearchStackScreen} />
-        <Tab.Screen name="Home" component={HomeStackScreen} />
+        <Tab.Screen name="Home">
+          {(props) => <HomeStackScreen {...props} user={testUser} />}
+        </Tab.Screen>
         <Tab.Screen name="Profile" component={ProfileStackScreen} />
       </Tab.Navigator>
     </NavigationContainer>

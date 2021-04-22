@@ -1,15 +1,23 @@
-import * as React from "react";
+import React from "react";
 import { Button, Text, View } from "react-native";
+import userContext from "../userContext";
 
-function HomeScreen({ navigation }) {
+function HomeScreen(props) {
+  const { navigate } = props.navigation;
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Home screen</Text>
-      <Button
-        title="Go to Book Club"
-        onPress={() => navigation.navigate("UserClub")}
-      />
-    </View>
+    <userContext.Consumer>
+      {(value) => (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text>{value.user.userId}</Text>
+          <Button
+            title="Go to Book Club"
+            onPress={() => navigate("UserClub")}
+          />
+        </View>
+      )}
+    </userContext.Consumer>
   );
 }
 export default HomeScreen;
