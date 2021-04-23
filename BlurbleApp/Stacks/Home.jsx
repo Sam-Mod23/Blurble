@@ -55,7 +55,7 @@ function HomeStackScreen() {
       <HomeStack.Screen
         name="BookInfo"
         component={BookInfoScreen}
-        options={{ title: "Book Information", ...headerOptions }}
+        options={{ title: "Information", ...headerOptions }}
       />
     </HomeStack.Navigator>
   );

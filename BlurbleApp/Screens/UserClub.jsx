@@ -2,7 +2,6 @@ import * as React from "react";
 import { Text, View, Button } from "react-native";
 
 const UserClubScreen = ({ navigation }) => {
-  console.log(navigation.params)
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>xyz Book Club</Text>
@@ -12,7 +11,7 @@ const UserClubScreen = ({ navigation }) => {
       />
       <Button title="Vote" onPress={() => navigation.navigate("Votes")} />
       <Button
-        title="Nominate"
+        title="Nominate a Book"
         onPress={() => navigation.navigate("BookSubmit")}
       />
     </View>

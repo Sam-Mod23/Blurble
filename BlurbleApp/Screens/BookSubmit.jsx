@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { SearchBar, ListItem } from "react-native-elements";
 
-const BookSubmitScreen = () => {
+const BookSubmitScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
 
@@ -10,7 +10,9 @@ const BookSubmitScreen = () => {
     if (search.length < 1) {
       return;
     } else {
-      fetch(`https://www.googleapis.com/books/v1/volumes?q=${search}`)
+      fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=${search}&maxResults=40`
+      )
         .then((response) => response.json())
         .then((json) => setData(json.items));
     }
@@ -26,7 +28,11 @@ const BookSubmitScreen = () => {
         />
         {data.map((item) => {
           return (
-            <ListItem key={item.id} bottomDivider>
+            <ListItem
+              key={item.etag}
+              bottomDivider
+              onPress={() => navigation.navigate("BookInfo", { item: item })}
+            >
               <ListItem.Content>
                 <ListItem.Title>{item.volumeInfo.title}</ListItem.Title>
                 <ListItem.Subtitle>
