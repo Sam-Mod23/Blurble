@@ -42,7 +42,7 @@ function ClubSearchStackScreen() {
       <ClubSearchStack.Screen
         name="UserClub"
         component={UserClubScreen}
-        options={{ title: "Club xyz", ...headerOptions }}
+        options={{ title: "Club Discussion", ...headerOptions }}
       />
       <ClubSearchStack.Screen
         name="Comments"
@@ -52,7 +52,7 @@ function ClubSearchStackScreen() {
       <ClubSearchStack.Screen
         name="Votes"
         component={VoteScreen}
-        options={{ title: "Vote for Books", ...headerOptions }}
+        options={{ title: "Vote", ...headerOptions }}
       />
       <ClubSearchStack.Screen
         name="BookSubmit"

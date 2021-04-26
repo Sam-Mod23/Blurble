@@ -131,6 +131,7 @@ const UserClubScreen = (props) => {
   ];
   const { navigation } = props;
   const [page, setPage] = useState(0);
+
   return (
     <View>
       <ScrollView>
@@ -144,7 +145,7 @@ const UserClubScreen = (props) => {
                 alignSelf: "center",
               }}
             >
-              {props.route.params.title.clubName}
+              {props.route.params.title}
             </Text>
             <Image
               style={{

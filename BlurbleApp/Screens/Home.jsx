@@ -55,6 +55,19 @@ const groups = [
   },
 ];
 
+function HomeScreen({ navigation }) {
+  return (
+    <ScrollView>
+      {groups.map((item) => {
+        return (
+          <GroupItem key={item.clubID} data={item} navigation={navigation} />
+        );
+      })}
+    </ScrollView>
+  );
+}
+export default HomeScreen;
+
 const GroupItem = (props) => {
   const { navigation } = props;
   const { clubName } = props.data;
@@ -99,7 +112,7 @@ const GroupItem = (props) => {
         color="#58B09C"
         onPress={() => {
           navigation.navigate("UserClub", {
-            title: { clubName },
+            title: clubName,
             thumbnail: book.volumeInfo.imageLinks.thumbnail,
             pages: book.volumeInfo.pageCount,
           });
@@ -108,16 +121,3 @@ const GroupItem = (props) => {
     </Card>
   );
 };
-
-function HomeScreen({ navigation }) {
-  return (
-    <ScrollView>
-      {groups.map((item) => {
-        return (
-          <GroupItem key={item.clubID} data={item} navigation={navigation} />
-        );
-      })}
-    </ScrollView>
-  );
-}
-export default HomeScreen;
