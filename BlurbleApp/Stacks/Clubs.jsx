@@ -62,7 +62,7 @@ function ClubSearchStackScreen() {
       <ClubSearchStack.Screen
         name="BookInfo"
         component={BookInfoScreen}
-        options={{ title: "Info", ...headerOptions }}
+        options={{ title: "Information", ...headerOptions }}
       />
     </ClubSearchStack.Navigator>
   );
