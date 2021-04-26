@@ -47,16 +47,4 @@ const BookSubmitScreen = ({ navigation }) => {
   );
 };
 
-// const BookList = (props) => {
-//   const { data } = props;
-//   return data.map((item) => {
-//     <ListItem key={item.id} bottomDivider>
-//       <ListItem.Content>
-//         <ListItem.Title>{item.volumeInfo.title}</ListItem.Title>
-//         <ListItem.Subtitle>{item.volumeInfo.subtitle}</ListItem.Subtitle>
-//       </ListItem.Content>
-//     </ListItem>;
-//   });
-// };
-
 export default BookSubmitScreen;

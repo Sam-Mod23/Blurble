@@ -59,6 +59,7 @@ const GroupItem = (props) => {
   const { navigation } = props;
   const { clubName } = props.data;
   const { currentBook } = props.data;
+
   const [book, setBook] = useState({
     volumeInfo: {
       title: "Untitled",

@@ -28,7 +28,7 @@ function BookInfoScreen(props) {
   }
 
   if (item.volumeInfo.authors === undefined) {
-    item.volumeInfo.authors = "~";
+    item.volumeInfo.authors = ["~"];
   }
 
   if (item.volumeInfo.publishedDate === undefined) {
