@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {
@@ -35,7 +35,10 @@ function HomeStackScreen() {
       <HomeStack.Screen
         name="UserClub"
         component={UserClubScreen}
-        options={{ title: "xyz Book Club", ...headerOptions }}
+        options={{
+          title: "Club Discussion",
+          ...headerOptions,
+        }}
       />
       <HomeStack.Screen
         name="Comments"

@@ -75,7 +75,7 @@ function BookInfoScreen(props) {
           </Text>
           <Card.Divider style={{ margin: 15 }} />
           <Text>{item.volumeInfo.description}</Text>
-          <Text>{item.volumeInfo.industryIdentifiers[0].identifier}</Text>
+
           <Button
             onPress={() =>
               Alert.alert(
@@ -99,6 +99,7 @@ function BookInfoScreen(props) {
               )
             }
             title={nominate}
+            color={"#58B09C"}
             disabled={pressed}
           />
         </Card>

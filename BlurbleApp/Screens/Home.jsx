@@ -66,6 +66,7 @@ const GroupItem = (props) => {
         thumbnail:
           "https://reactnativecode.com/wp-content/uploads/2018/02/Default_Image_Thumbnail.png",
       },
+      pageCount: 0,
     },
   });
 
@@ -94,8 +95,13 @@ const GroupItem = (props) => {
       <Text style={{ textAlign: "center" }}>{book.volumeInfo.title}</Text>
       <Button
         title="Discuss..."
+        color="#58B09C"
         onPress={() => {
-          navigation.navigate("UserClub");
+          navigation.navigate("UserClub", {
+            title: { clubName },
+            thumbnail: book.volumeInfo.imageLinks.thumbnail,
+            pages: book.volumeInfo.pageCount,
+          });
         }}
       />
     </Card>
@@ -111,12 +117,6 @@ function HomeScreen({ navigation }) {
         );
       })}
     </ScrollView>
-    // <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-    //   <Button
-    //     title="Go to Book Club"
-    //     onPress={() => navigation.navigate("UserClub")}
-    //   />
-    // </View>
   );
 }
 export default HomeScreen;
