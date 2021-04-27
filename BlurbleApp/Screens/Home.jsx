@@ -10,53 +10,63 @@ import {
 import { Card } from "react-native-elements";
 import BookInfoScreen from "./BookInfo";
 
-const groups = [
-  {
-    clubID: "1234",
-    clubName: "Manchester Harry Potter readers",
-    currentBook: {
-      selfLink: "https://www.googleapis.com/books/v1/volumes/N6DeDQAAQBAJ",
-    },
-  },
-  {
-    clubID: "5678",
-    clubName: "Lord of the Rings all time fans",
-    currentBook: {
-      selfLink: "https://www.googleapis.com/books/v1/volumes/E6M_PgAACAAJ",
-    },
-  },
-  {
-    clubID: "9123",
-    clubName: "En-Seussiasts",
-    currentBook: {
-      selfLink: "https://www.googleapis.com/books/v1/volumes/_E5BDwAAQBAJ",
-    },
-  },
-  {
-    clubID: "4567",
-    clubName: "00-readers",
-    currentBook: {
-      selfLink: "https://www.googleapis.com/books/v1/volumes/yORSvQEACAAJ",
-    },
-  },
-  {
-    clubID: "8901",
-    clubName: "History Lovers Anonymous",
-    currentBook: {
-      selfLink: "https://www.googleapis.com/books/v1/volumes/HmShg3dnLSMC",
-    },
-  },
-  {
-    clubID: "2345",
-    clubName: "Random book Club",
-    currentBook: {
-      selfLink: "https://www.googleapis.com/books/v1/volumes/cTbIDwAAQBAJ",
-    },
-  },
-];
+// const groups = [
+//   {
+//     clubID: "1234",
+//     clubName: "Manchester Harry Potter readers",
+//     currentBook: {
+//       selfLink: "https://www.googleapis.com/books/v1/volumes/N6DeDQAAQBAJ",
+//     },
+//   },
+//   {
+//     clubID: "5678",
+//     clubName: "Lord of the Rings all time fans",
+//     currentBook: {
+//       selfLink: "https://www.googleapis.com/books/v1/volumes/E6M_PgAACAAJ",
+//     },
+//   },
+//   {
+//     clubID: "9123",
+//     clubName: "En-Seussiasts",
+//     currentBook: {
+//       selfLink: "https://www.googleapis.com/books/v1/volumes/_E5BDwAAQBAJ",
+//     },
+//   },
+//   {
+//     clubID: "4567",
+//     clubName: "00-readers",
+//     currentBook: {
+//       selfLink: "https://www.googleapis.com/books/v1/volumes/yORSvQEACAAJ",
+//     },
+//   },
+//   {
+//     clubID: "8901",
+//     clubName: "History Lovers Anonymous",
+//     currentBook: {
+//       selfLink: "https://www.googleapis.com/books/v1/volumes/HmShg3dnLSMC",
+//     },
+//   },
+//   {
+//     clubID: "2345",
+//     clubName: "Random book Club",
+//     currentBook: {
+//       selfLink: "https://www.googleapis.com/books/v1/volumes/cTbIDwAAQBAJ",
+//     },
+//   },
+// ];
+
+const userId = 1;
 
 function HomeScreen({ navigation }) {
-  return (
+  const [groups, setGroups] = useState([]);
+
+  useEffect(() => {
+    fetch(`https://blurble-project.herokuapp.com/api/users/_id=${userId}`)
+      .then((response) => response.json())
+      .then((json) => setGroups(json.user.clubs));
+  }, []);
+
+  return groups.length ? (
     <ScrollView>
       {groups.map((item) => {
         return (
@@ -64,6 +74,17 @@ function HomeScreen({ navigation }) {
         );
       })}
     </ScrollView>
+  ) : (
+    <View>
+      <Text>Looks like you're not a member of any book clubs yet...</Text>
+      <Button
+        title="Look for clubs!"
+        color="#58B09C"
+        onPress={() => {
+          navigation.navigate("Clubs");
+        }}
+      />
+    </View>
   );
 }
 export default HomeScreen;
