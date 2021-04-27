@@ -55,45 +55,56 @@ import BookInfoScreen from "./BookInfo";
 //   },
 // ];
 
-const userId = 1;
+const user_id = 1;
 
 function HomeScreen({ navigation }) {
-  const [groups, setGroups] = useState([]);
+  const [clubs, setClubs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`https://blurble-project.herokuapp.com/api/users/_id=${userId}`)
+    const newClubs = [];
+    fetch(`https://blurble-project.herokuapp.com/api/users/_id=${user_id}`)
       .then((response) => response.json())
-      .then((json) => setGroups(json.user.clubs));
+      .then((json) => {
+        setClubs(json.user.clubs);
+        setIsLoading(false);
+      });
   }, []);
 
-  return groups.length ? (
-    <ScrollView>
-      {groups.map((item) => {
-        return (
-          <GroupItem key={item.clubID} data={item} navigation={navigation} />
-        );
-      })}
-    </ScrollView>
-  ) : (
-    <View>
-      <Text>Looks like you're not a member of any book clubs yet...</Text>
-      <Button
-        title="Look for clubs!"
-        color="#58B09C"
-        onPress={() => {
-          navigation.navigate("Clubs");
-        }}
-      />
-    </View>
-  );
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  } else if (clubs.length) {
+    return (
+      <ScrollView>
+        {clubs.map((item) => {
+          return <GroupItem key={item.club_id} navigation={navigation} />;
+        })}
+      </ScrollView>
+    );
+  } else {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>Looks like you're not a member of any book clubs yet...</Text>
+        <Button
+          title="Look for clubs!"
+          color="#58B09C"
+          onPress={() => {
+            navigation.navigate("Clubs");
+          }}
+        />
+      </View>
+    );
+  }
 }
+
 export default HomeScreen;
 
 const GroupItem = (props) => {
-  const { navigation } = props;
-  const { clubName } = props.data;
-  const { currentBook } = props.data;
-
+  const { key, navigation } = props;
   const [book, setBook] = useState({
     volumeInfo: {
       title: "Untitled",
@@ -106,9 +117,13 @@ const GroupItem = (props) => {
   });
 
   useEffect(() => {
-    fetch(currentBook.selfLink)
+    fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${key}`)
       .then((response) => response.json())
-      .then((json) => setBook(json));
+      .then((json) => {
+        fetch(json.club.currentBook.selfLink)
+          .then((response) => response.json())
+          .then((json) => setBook(json));
+      });
   }, []);
 
   return (
