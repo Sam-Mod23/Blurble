@@ -48,7 +48,7 @@ function HomeStackScreen() {
       <HomeStack.Screen
         name="Votes"
         component={VoteScreen}
-        options={{ title: "Next Month's Book", ...headerOptions }}
+        options={{ title: "Vote", ...headerOptions }}
       />
       <HomeStack.Screen
         name="BookSubmit"

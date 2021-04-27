@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Button, Text, View } from "react-native";
+import {
+  Button,
+  Text,
+  View,
+  ScrollView,
+  ActivityIndicator,
+  Image,
+} from "react-native";
 import { Avatar, ListItem, Card } from "react-native-elements";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -11,8 +18,10 @@ function ProfileScreen({ navigation }) {
     { title: "Location:", subtitle: "Manchester" },
     { title: "DOB:", subtitle: "25/5/88" },
   ];
+  const flubber =
+    "https://cdn2.wanderlust.co.uk/media/1037/forest-web.jpg?anchor=center&mode=crop&width=1200&height=0&rnd=132605629110000000";
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}>
       <Card>
         <Avatar
           size="xlarge"
@@ -36,8 +45,30 @@ function ProfileScreen({ navigation }) {
             </ListItem>
           );
         })}
+        <View
+          style={{
+            flex: 1,
+
+            marginTop: 30,
+            alignSelf: "center",
+            marginBottom: 30,
+          }}
+        >
+          <Text style={{ alignSelf: "center", marginTop: 30 }}>Blurbles!</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Avatar
+              size="medium"
+              source={{
+                uri:
+                  "https://i.pinimg.com/originals/f6/31/24/f63124109f6c4e09cfa83162f4f20378.png",
+              }}
+              containerStyle={{ alignSelf: "center" }}
+            />
+            <Text style={{ alignSelf: "center", fontSize: 75 }}>50</Text>
+          </View>
+        </View>
       </Card>
-    </View>
+    </ScrollView>
   );
 }
 
