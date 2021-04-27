@@ -42,6 +42,8 @@ function VoteScreen() {
 export default VoteScreen;
 
 const BookItem = (props) => {
+  // get request for selfLink from API - replace prop-extraction on line 47
+
   const { selfLink } = props.data;
 
   const [votes, setVotes] = useState(props.data.votes);

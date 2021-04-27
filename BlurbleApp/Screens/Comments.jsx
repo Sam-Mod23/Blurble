@@ -12,6 +12,8 @@ function CommentsScreen(props) {
   const [disabled, setDisabled] = useState(false);
   const [buttonText, setButtonText] = useState(" Post Comment");
 
+  // post request for body of comment
+
   return (
     <ScrollView style={{ paddingHorizontal: 30, paddingTop: 30 }}>
       <Input

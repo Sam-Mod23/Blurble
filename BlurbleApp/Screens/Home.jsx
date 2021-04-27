@@ -56,6 +56,8 @@ const groups = [
 ];
 
 function HomeScreen({ navigation }) {
+  // getRequest on user to get all user's groups
+
   return (
     <ScrollView>
       {groups.map((item) => {
@@ -69,6 +71,8 @@ function HomeScreen({ navigation }) {
 export default HomeScreen;
 
 const GroupItem = (props) => {
+  // getRequest on each group
+
   const { navigation } = props;
   const { clubName } = props.data;
   const { currentBook } = props.data;

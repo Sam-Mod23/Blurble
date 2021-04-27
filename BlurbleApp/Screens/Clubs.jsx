@@ -67,6 +67,8 @@ const groups = [
 ];
 
 const ClubsScreen = ({ navigation }) => {
+  // get request here on groups to get all groups
+
   return (
     <ScrollView>
       {groups.map((item) => {
@@ -80,6 +82,8 @@ const ClubsScreen = ({ navigation }) => {
 export default ClubsScreen;
 
 const ClubCard = (props) => {
+  // patch request in this function to patch user's clubs
+
   const { navigation } = props;
   const { clubName, currentBook, clubID, description } = props.data;
 

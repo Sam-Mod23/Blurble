@@ -11,6 +11,8 @@ import { Avatar, ListItem, Card } from "react-native-elements";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 function ProfileScreen({ navigation }) {
+  // get request using userId on user endpoint
+
   const list = [
     { title: "Name:", subtitle: "John Smith" },
     { title: "Username:", subtitle: "Jsmith123" },

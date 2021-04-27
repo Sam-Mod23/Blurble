@@ -132,6 +132,8 @@ const UserClubScreen = (props) => {
   const { navigation } = props;
   const [page, setPage] = useState(0);
 
+  // getRequest for comments - let group info just pass down on props as is
+
   return (
     <View>
       <ScrollView>

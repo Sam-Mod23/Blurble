@@ -11,6 +11,8 @@ import {
 import { Card } from "react-native-elements";
 
 function BookInfoScreen(props) {
+  // patch request to patch nominated books array
+
   [pressed, setPressed] = useState(false);
   [nominate, setNominate] = useState("Nominate");
   const { navigation } = props;
