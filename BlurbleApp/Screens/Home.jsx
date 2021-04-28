@@ -8,12 +8,11 @@ import {
   Text,
 } from "react-native";
 import { Card } from "react-native-elements";
+import userContext from "../userContext";
 import BookInfoScreen from "./BookInfo";
 
-// USER_ID TO BE BROUGHT IN FROM CONTEXT
-const user_id = 1;
-
 function HomeScreen({ navigation }) {
+  const [user_id, setUser_Id] = useState(userContext._currentValue._id);
   const [clubs, setClubs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
