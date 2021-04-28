@@ -4,12 +4,11 @@ import { ListItem, Avatar, Button } from "react-native-elements";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import userContext from "../userContext";
 
-function VoteScreen() {
+function VoteScreen(props) {
+  const { clubID } = props.route.params;
   const [club, setClub] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(userContext._currentValue._id);
-
-  const clubID = 1;
 
   useEffect(() => {
     fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${clubID}`)
@@ -56,9 +55,12 @@ const BookItem = (props) => {
   const addVote = () => {
     fetch(
       `https://blurble-project.herokuapp.com/api/clubs/_id=${props.clubID}`,
-      { method: "PATCH" },
-      { body: { selfLink: props.data.selfLink, incVotes: 1 } }
-    ).then(console.log("patch request sent to votes"));
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify({ selfLink: props.data.selfLink, incVotes: 1 }),
+      }
+    );
   };
 
   useEffect(() => {

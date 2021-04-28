@@ -64,6 +64,7 @@ export default HomeScreen;
 
 const GroupItem = (props) => {
   const { club_id, navigation } = props;
+
   const [book, setBook] = useState({
     volumeInfo: {
       title: "Untitled",
@@ -74,6 +75,7 @@ const GroupItem = (props) => {
       pageCount: 0,
     },
   });
+  const [club, setClub] = useState("");
 
   useEffect(() => {
     fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${club_id}`)
@@ -81,6 +83,7 @@ const GroupItem = (props) => {
         return response.json();
       })
       .then(({ club }) => {
+        setClub(club.clubName);
         return fetch(club.currentBook)
           .then((response) => {
             return response.json();
@@ -93,7 +96,7 @@ const GroupItem = (props) => {
 
   return (
     <Card>
-      <Card.Title>{book.volumeInfo.title}</Card.Title>
+      <Card.Title>{club}</Card.Title>
       <Card.Divider />
       <Image
         style={{
@@ -116,6 +119,8 @@ const GroupItem = (props) => {
             title: book.volumeInfo.title,
             thumbnail: book.volumeInfo.imageLinks.thumbnail,
             pages: book.volumeInfo.pageCount,
+            clubID: club_id,
+            book: book.selfLink,
           });
         }}
       />

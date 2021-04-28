@@ -39,6 +39,7 @@ function ProfileScreen({ navigation }) {
     updatedAt: "",
     username: "",
   });
+  const [redeemBlurbles, setRedeemBlurbles] = useState(0);
 
   useEffect(() => {
     fetch(`https://blurble-project.herokuapp.com/api/users/_id=${userID}`)
@@ -47,7 +48,7 @@ function ProfileScreen({ navigation }) {
         setUser(json.user);
         setIsLoading(false);
       });
-  }, []);
+  }, [redeemBlurbles]);
 
   const list = [
     { title: "Name:", subtitle: user.name },
@@ -70,6 +71,7 @@ function ProfileScreen({ navigation }) {
     return (
       <ScrollView style={{ flex: 1 }}>
         <Card>
+          {console.log("I updated!")}
           <Avatar
             size="xlarge"
             source={{ uri: user.avatar }}
@@ -101,9 +103,15 @@ function ProfileScreen({ navigation }) {
               marginBottom: 30,
             }}
           >
-            <Text style={{ alignSelf: "center", marginTop: 30 }}>
-              Blurbles!
-            </Text>
+            <Button
+              style={{ alignSelf: "center", marginTop: 30 }}
+              color={"#58B09C"}
+              title={"Blurbles!"}
+              onPress={() => {
+                setRedeemBlurbles(redeemBlurbles + 1);
+              }}
+            />
+
             <View style={{ flexDirection: "row" }}>
               <Avatar
                 size="medium"

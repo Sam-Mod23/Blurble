@@ -14,7 +14,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 const UserClubScreen = (props) => {
   const { navigation } = props;
-  const [page, setPage] = useState(0);
+  const { clubID } = props.route.params;
+  const [page, setPage] = useState(1);
   const [comments, setComments] = useState({
     comments: [
       {
@@ -33,16 +34,16 @@ const UserClubScreen = (props) => {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  const _id = 1;
-
   useEffect(() => {
-    fetch(`https://blurble-project.herokuapp.com/api/comments/club_id=1`)
+    fetch(
+      `https://blurble-project.herokuapp.com/api/comments/club_id=${clubID}?orderBy=desc&progress=${page}`
+    )
       .then((response) => response.json())
       .then((json) => {
         setComments(json.comments);
         setIsLoading(false);
       });
-  }, []);
+  }, [page]);
 
   if (isLoading) {
     return (
@@ -94,6 +95,8 @@ const UserClubScreen = (props) => {
                 onPress={() =>
                   navigation.navigate("Comments", {
                     pages: props.route.params.pages,
+                    book: props.route.params.book,
+                    clubID: clubID,
                   })
                 }
                 buttonStyle={{
@@ -106,7 +109,7 @@ const UserClubScreen = (props) => {
                 icon={
                   <Ionicons name={"ribbon-outline"} size={20} color="#C97064" />
                 }
-                onPress={() => navigation.navigate("Votes")}
+                onPress={() => navigation.navigate("Votes", { clubID: clubID })}
                 buttonStyle={{
                   backgroundColor: "white",
                   paddingHorizontal: 30,
@@ -116,7 +119,9 @@ const UserClubScreen = (props) => {
                 icon={
                   <Ionicons name={"search-outline"} size={20} color="#C97064" />
                 }
-                onPress={() => navigation.navigate("BookSubmit")}
+                onPress={() =>
+                  navigation.navigate("BookSubmit", { clubID: clubID })
+                }
                 buttonStyle={{
                   backgroundColor: "white",
                   paddingHorizontal: 30,
@@ -136,25 +141,31 @@ const UserClubScreen = (props) => {
           </Card>
           <View style={{ paddingTop: 20, paddingHorizontal: 20 }}></View>
           <Card>
-            {comments.map((comment) => {
-              return (
-                <ListItem bottomDivider key={comment._id}>
-                  <ListItem.Content>
-                    <ListItem.Title>{comment.username}</ListItem.Title>
-                    <View>
+            {comments ? (
+              comments.map((comment) => {
+                return (
+                  <ListItem bottomDivider key={comment._id}>
+                    <ListItem.Content>
+                      <ListItem.Title>{comment.username}</ListItem.Title>
+                      <View>
+                        <Text> </Text>
+                        <Text>{comment.body}</Text>
+                      </View>
                       <Text> </Text>
-                      <Text>{comment.body}</Text>
-                    </View>
-                    <Text> </Text>
-                    <View style={{ textAlign: "right" }}>
-                      <Text style={{ textAlign: "right" }}>
-                        p{comment.progress}
-                      </Text>
-                    </View>
-                  </ListItem.Content>
-                </ListItem>
-              );
-            })}
+                      <View style={{ textAlign: "right" }}>
+                        <Text style={{ textAlign: "right" }}>
+                          p{comment.progress}
+                        </Text>
+                      </View>
+                    </ListItem.Content>
+                  </ListItem>
+                );
+              })
+            ) : (
+              <View>
+                <Text>No Comments before page {page}</Text>
+              </View>
+            )}
           </Card>
         </ScrollView>
       </View>

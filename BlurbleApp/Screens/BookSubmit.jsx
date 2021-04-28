@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, Text } from "react-native";
 import { SearchBar, ListItem } from "react-native-elements";
 
-const BookSubmitScreen = ({ navigation }) => {
+const BookSubmitScreen = (props) => {
+  const { navigation } = props;
+  const { clubID } = props.route.params;
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
 
@@ -26,22 +28,33 @@ const BookSubmitScreen = ({ navigation }) => {
           onChangeText={setSearch}
           value={search}
         />
-        {data.map((item) => {
-          return (
-            <ListItem
-              key={item.etag}
-              bottomDivider
-              onPress={() => navigation.navigate("BookInfo", { item: item })}
-            >
-              <ListItem.Content>
-                <ListItem.Title>{item.volumeInfo.title}</ListItem.Title>
-                <ListItem.Subtitle>
-                  {item.volumeInfo.subtitle}
-                </ListItem.Subtitle>
-              </ListItem.Content>
-            </ListItem>
-          );
-        })}
+        {data ? (
+          data.map((item) => {
+            return (
+              <ListItem
+                key={item.etag}
+                bottomDivider
+                onPress={() =>
+                  navigation.navigate("BookInfo", {
+                    item: item,
+                    clubID: clubID,
+                  })
+                }
+              >
+                <ListItem.Content>
+                  <ListItem.Title>{item.volumeInfo.title}</ListItem.Title>
+                  <ListItem.Subtitle>
+                    {item.volumeInfo.subtitle}
+                  </ListItem.Subtitle>
+                </ListItem.Content>
+              </ListItem>
+            );
+          })
+        ) : (
+          <View>
+            <Text>No Results.</Text>
+          </View>
+        )}
       </ScrollView>
     </View>
   );
