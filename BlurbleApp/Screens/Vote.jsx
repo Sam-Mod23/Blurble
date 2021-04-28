@@ -1,54 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, ScrollView } from "react-native";
+import { ActivityIndicator, Text, View, ScrollView } from "react-native";
 import { ListItem, Avatar, Button } from "react-native-elements";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
-const list = [
-  {
-    votes: 0,
-    selfLink: "https://www.googleapis.com/books/v1/volumes/GpuNDwAAQBAJ",
-  },
-  {
-    votes: 2,
-    selfLink: "https://www.googleapis.com/books/v1/volumes/NxaVzQEACAAJ",
-  },
-  {
-    votes: 99,
-    selfLink: "https://www.googleapis.com/books/v1/volumes/DiK_UShlVCEC",
-  },
-  {
-    votes: 3,
-    selfLink: "https://www.googleapis.com/books/v1/volumes/wS-EzQEACAAJ",
-  },
-  {
-    votes: 98,
-    selfLink: "https://www.googleapis.com/books/v1/volumes/P1f3twEACAAJ",
-  },
-  {
-    votes: 15,
-    selfLink: "https://www.googleapis.com/books/v1/volumes/exTZzQEACAAJ",
-  },
-];
+import userContext from "../userContext";
 
 function VoteScreen() {
-  return (
-    <ScrollView>
-      {list.map((item, i) => {
-        return <BookItem key={i} data={item} />;
-      })}
-    </ScrollView>
-  );
+  const [club, setClub] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(userContext._currentValue._id);
+
+  const clubID = 1;
+
+  useEffect(() => {
+    fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${clubID}`)
+      .then((response) => response.json())
+      .then((json) => {
+        setClub(json.club);
+        setIsLoading(false);
+      });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  } else {
+    return (
+      <ScrollView>
+        {club.nominatedBooks.map((item, i) => {
+          return <BookItem key={i} data={item} clubID={clubID} />;
+        })}
+      </ScrollView>
+    );
+  }
 }
 export default VoteScreen;
 
 const BookItem = (props) => {
-  const { selfLink } = props.data;
-
   const [votes, setVotes] = useState(props.data.votes);
   const [iconName, setIconName] = useState("flame-outline");
   const [canPress, setCanPress] = useState(true);
   const [iconColor, setIconColor] = useState("#2f2f2f");
-
   const [book, setBook] = useState({
     volumeInfo: {
       title: "",
@@ -59,8 +53,16 @@ const BookItem = (props) => {
     },
   });
 
+  const addVote = () => {
+    fetch(
+      `https://blurble-project.herokuapp.com/api/clubs/_id=${props.clubID}`,
+      { method: "PATCH" },
+      { body: { selfLink: props.data.selfLink, incVotes: 1 } }
+    ).then(console.log("patch request sent to votes"));
+  };
+
   useEffect(() => {
-    fetch(selfLink)
+    fetch(props.data.selfLink)
       .then((response) => response.json())
       .then((json) => setBook(json));
   }, []);
@@ -87,6 +89,7 @@ const BookItem = (props) => {
           setVotes(votes + 1);
           setCanPress(false);
           setIconColor("#C97064");
+          addVote();
         }}
         icon={<Ionicons name={iconName} color={iconColor} size={20} />}
       />

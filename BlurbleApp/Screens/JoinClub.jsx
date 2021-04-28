@@ -11,7 +11,6 @@ const JoinClubScreen = (props) => {
     props.route.params.pages = 1000;
   }
 
-  console.log(props.route.params.pages);
   return (
     <ScrollView>
       <Card>
