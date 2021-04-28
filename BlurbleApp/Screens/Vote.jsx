@@ -8,7 +8,6 @@ function VoteScreen(props) {
   const { clubID } = props.route.params;
   const [club, setClub] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState(userContext._currentValue._id);
 
   useEffect(() => {
     fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${clubID}`)
@@ -38,6 +37,7 @@ function VoteScreen(props) {
 export default VoteScreen;
 
 const BookItem = (props) => {
+  const [user, setUser] = useState(userContext._currentValue._id);
   const [votes, setVotes] = useState(props.data.votes);
   const [iconName, setIconName] = useState("flame-outline");
   const [canPress, setCanPress] = useState(true);
@@ -53,14 +53,25 @@ const BookItem = (props) => {
   });
 
   const addVote = () => {
-    fetch(
-      `https://blurble-project.herokuapp.com/api/clubs/_id=${props.clubID}`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json;charset=utf-8" },
-        body: JSON.stringify({ selfLink: props.data.selfLink, incVotes: 1 }),
-      }
-    );
+    fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${props.clubID}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => {
+        if (!json.nominatedBooks.votedIds.includes(user)) {
+          return fetch(
+            `https://blurble-project.herokuapp.com/api/clubs/_id=${props.clubID}`,
+            {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json;charset=utf-8" },
+              body: JSON.stringify({
+                selfLink: props.data.selfLink,
+                incVotes: 1,
+              }),
+            }
+          );
+        }
+      });
   };
 
   useEffect(() => {
