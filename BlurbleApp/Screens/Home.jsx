@@ -10,51 +10,7 @@ import {
 import { Card } from "react-native-elements";
 import BookInfoScreen from "./BookInfo";
 
-// const groups = [
-//   {
-//     clubID: "1234",
-//     clubName: "Manchester Harry Potter readers",
-//     currentBook: {
-//       selfLink: "https://www.googleapis.com/books/v1/volumes/N6DeDQAAQBAJ",
-//     },
-//   },
-//   {
-//     clubID: "5678",
-//     clubName: "Lord of the Rings all time fans",
-//     currentBook: {
-//       selfLink: "https://www.googleapis.com/books/v1/volumes/E6M_PgAACAAJ",
-//     },
-//   },
-//   {
-//     clubID: "9123",
-//     clubName: "En-Seussiasts",
-//     currentBook: {
-//       selfLink: "https://www.googleapis.com/books/v1/volumes/_E5BDwAAQBAJ",
-//     },
-//   },
-//   {
-//     clubID: "4567",
-//     clubName: "00-readers",
-//     currentBook: {
-//       selfLink: "https://www.googleapis.com/books/v1/volumes/yORSvQEACAAJ",
-//     },
-//   },
-//   {
-//     clubID: "8901",
-//     clubName: "History Lovers Anonymous",
-//     currentBook: {
-//       selfLink: "https://www.googleapis.com/books/v1/volumes/HmShg3dnLSMC",
-//     },
-//   },
-//   {
-//     clubID: "2345",
-//     clubName: "Random book Club",
-//     currentBook: {
-//       selfLink: "https://www.googleapis.com/books/v1/volumes/cTbIDwAAQBAJ",
-//     },
-//   },
-// ];
-
+// USER_ID TO BE BROUGHT IN FROM CONTEXT
 const user_id = 1;
 
 function HomeScreen({ navigation }) {
@@ -62,7 +18,6 @@ function HomeScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const newClubs = [];
     fetch(`https://blurble-project.herokuapp.com/api/users/_id=${user_id}`)
       .then((response) => response.json())
       .then((json) => {
@@ -81,7 +36,13 @@ function HomeScreen({ navigation }) {
     return (
       <ScrollView>
         {clubs.map((item) => {
-          return <GroupItem key={item.club_id} navigation={navigation} />;
+          return (
+            <GroupItem
+              key={item.club_id}
+              club_id={item.club_id}
+              navigation={navigation}
+            />
+          );
         })}
       </ScrollView>
     );
@@ -104,7 +65,7 @@ function HomeScreen({ navigation }) {
 export default HomeScreen;
 
 const GroupItem = (props) => {
-  const { key, navigation } = props;
+  const { club_id, navigation } = props;
   const [book, setBook] = useState({
     volumeInfo: {
       title: "Untitled",
@@ -117,18 +78,24 @@ const GroupItem = (props) => {
   });
 
   useEffect(() => {
-    fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${key}`)
-      .then((response) => response.json())
-      .then((json) => {
-        fetch(json.club.currentBook.selfLink)
-          .then((response) => response.json())
-          .then((json) => setBook(json));
+    fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${club_id}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then(({ club }) => {
+        return fetch(club.currentBook)
+          .then((response) => {
+            return response.json();
+          })
+          .then((bookInfo) => {
+            setBook(bookInfo);
+          });
       });
   }, []);
 
   return (
     <Card>
-      <Card.Title>{clubName}</Card.Title>
+      <Card.Title>{book.volumeInfo.title}</Card.Title>
       <Card.Divider />
       <Image
         style={{
@@ -148,7 +115,7 @@ const GroupItem = (props) => {
         color="#58B09C"
         onPress={() => {
           navigation.navigate("UserClub", {
-            title: clubName,
+            title: book.volumeInfo.title,
             thumbnail: book.volumeInfo.imageLinks.thumbnail,
             pages: book.volumeInfo.pageCount,
           });
