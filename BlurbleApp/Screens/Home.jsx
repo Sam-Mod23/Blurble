@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { Card } from "react-native-elements";
 import userContext from "../userContext";
-import BookInfoScreen from "./BookInfo";
 
 function HomeScreen({ navigation }) {
   const [user_id, setUser_Id] = useState(userContext._currentValue._id);
