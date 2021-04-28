@@ -65,7 +65,7 @@ export default ClubsScreen;
 
 const ClubCard = (props) => {
   const { navigation } = props;
-  const { clubName, currentBook, clubID, description } = props.data;
+  const { clubName, currentBook, _id, description } = props.data;
   const [isLoading, setIsLoading] = useState(true);
 
   const [book, setBook] = useState({
@@ -121,6 +121,7 @@ const ClubCard = (props) => {
               thumbnail: book.volumeInfo.imageLinks.thumbnail,
               pages: book.volumeInfo.pageCount,
               about: description,
+              clubID: _id,
             });
           }}
         />
