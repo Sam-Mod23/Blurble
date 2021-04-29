@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   ScrollView,
@@ -19,11 +19,22 @@ function HomeScreen({ navigation }) {
   const [user_id, setUser_Id] = useState(userContext._currentValue._id);
   const [clubs, setClubs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = React.useCallback(() => {
+  const getClubs = () => {
+    fetch(`https://blurble-project.herokuapp.com/api/users/_id=${user_id}`)
+      .then((response) => response.json())
+      .then((json) => {
+        setClubs(json.user.clubs);
+        setIsLoading(false);
+      });
+  };
+
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
+    setIsLoading(true);
     wait(2000).then(() => setRefreshing(false));
+    getClubs();
   }, []);
 
   useEffect(() => {
@@ -33,7 +44,7 @@ function HomeScreen({ navigation }) {
         setClubs(json.user.clubs);
         setIsLoading(false);
       });
-  }, [refreshing]);
+  }, []);
 
   if (isLoading) {
     return (

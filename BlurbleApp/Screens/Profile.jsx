@@ -71,7 +71,14 @@ function ProfileScreen({ navigation }) {
     return (
       <ScrollView style={{ flex: 1 }}>
         <Card>
-          {console.log("I updated!")}
+          <Button
+            color="#58b09c"
+            title="Logout"
+            onPress={() => {
+              navigation.navigate("Login");
+            }}
+          />
+
           <Avatar
             size="xlarge"
             source={{ uri: user.avatar }}
