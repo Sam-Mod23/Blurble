@@ -6,14 +6,25 @@ import {
   Image,
   ActivityIndicator,
   Text,
+  RefreshControl,
 } from "react-native";
 import { Card } from "react-native-elements";
 import userContext from "../userContext";
+
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
 
 function HomeScreen({ navigation }) {
   const [user_id, setUser_Id] = useState(userContext._currentValue._id);
   const [clubs, setClubs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   useEffect(() => {
     fetch(`https://blurble-project.herokuapp.com/api/users/_id=${user_id}`)
@@ -22,7 +33,7 @@ function HomeScreen({ navigation }) {
         setClubs(json.user.clubs);
         setIsLoading(false);
       });
-  }, []);
+  }, [refreshing]);
 
   if (isLoading) {
     return (
@@ -32,14 +43,14 @@ function HomeScreen({ navigation }) {
     );
   } else if (clubs.length) {
     return (
-      <ScrollView>
-        {clubs.map((item) => {
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {clubs.map((item, i) => {
           return (
-            <GroupItem
-              key={item.club_id}
-              club_id={item.club_id}
-              navigation={navigation}
-            />
+            <GroupItem key={i} club_id={item.club_id} navigation={navigation} />
           );
         })}
       </ScrollView>
@@ -115,8 +126,9 @@ const GroupItem = (props) => {
         title="Discuss..."
         color="#58B09C"
         onPress={() => {
+          console.log(club);
           navigation.navigate("UserClub", {
-            title: book.volumeInfo.title,
+            title: club,
             thumbnail: book.volumeInfo.imageLinks.thumbnail,
             pages: book.volumeInfo.pageCount,
             clubID: club_id,

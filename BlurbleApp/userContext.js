@@ -1,8 +1,8 @@
 import React from "react";
 
 const userContext = React.createContext({
-  _id: "3",
-  username: "joetilbybaxter",
+  _id: "1",
+  username: "geocunn",
 });
 
 export default userContext;

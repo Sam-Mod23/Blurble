@@ -78,6 +78,7 @@ const BookItem = (props) => {
 
   return (
     <ListItem bottomDivider>
+      {console.log(props)}
       <Avatar source={{ uri: book.volumeInfo.imageLinks.thumbnail }} />
       <ListItem.Content>
         <ListItem.Title>{book.volumeInfo.title}</ListItem.Title>

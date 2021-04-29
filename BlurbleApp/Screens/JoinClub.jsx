@@ -16,15 +16,20 @@ const JoinClubScreen = (props) => {
   }
 
   const patchClub = () => {
-    fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${clubID}`),
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json;charset=utf-8" },
-        body: JSON.stringify({ addMember: userID }),
-      };
+    fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${clubID}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json;charset=utf-8" },
+      body: JSON.stringify({ addMember: userID }),
+    });
   };
 
-  const patchUser = () => {};
+  const patchUser = () => {
+    fetch(`https://blurble-project.herokuapp.com/api/users/_id=${userID}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json;charset=utf-8" },
+      body: JSON.stringify({ club_id: clubID }),
+    });
+  };
 
   return (
     <ScrollView>
@@ -61,6 +66,7 @@ const JoinClubScreen = (props) => {
             setJoin(true);
             setButton("Joined!");
             patchClub();
+            patchUser();
             navigation.navigate("UserClub", {
               title: props.route.params.title,
               thumbnail: props.route.params.thumbnail,

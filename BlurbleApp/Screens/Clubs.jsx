@@ -6,9 +6,14 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { Card } from "react-native-elements";
 import userContext from "../userContext";
+
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
 
 const ClubsScreen = (props) => {
   const { navigation } = props;
@@ -31,17 +36,31 @@ const ClubsScreen = (props) => {
       updatedAt: "",
     },
   ]);
-  const [userClubs, setUserClubs] = useState([{}, {}]);
-  const notClub = [];
+  const [userClubs, setUserClubs] = useState([1]);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   useEffect(() => {
     fetch(`https://blurble-project.herokuapp.com/api/clubs`)
       .then((response) => response.json())
-      .then((json) => {
-        setAllClubs(json.clubs);
-        setIsLoading(false);
+      .then((json) => setAllClubs(json.clubs))
+      .then(() => {
+        fetch(`https://blurble-project.herokuapp.com/api/users/_id=${user}`)
+          .then((response) => response.json())
+          .then((json) => {
+            setUserClubs(
+              json.user.clubs.map((clubObject) => {
+                return clubObject.club_id;
+              })
+            );
+            setIsLoading(false);
+          });
       });
-  }, []);
+  }, [refreshing]);
 
   if (isLoading) {
     return (
@@ -51,11 +70,17 @@ const ClubsScreen = (props) => {
     );
   } else {
     return (
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {allClubs.map((item) => {
-          return (
-            <ClubCard key={item._id} data={item} navigation={navigation} />
-          );
+          if (!userClubs.includes(item._id)) {
+            return (
+              <ClubCard key={item._id} data={item} navigation={navigation} />
+            );
+          }
         })}
       </ScrollView>
     );
