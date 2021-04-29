@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   ScrollView,
@@ -6,14 +6,36 @@ import {
   Image,
   ActivityIndicator,
   Text,
+  RefreshControl,
 } from "react-native";
 import { Card } from "react-native-elements";
 import userContext from "../userContext";
+
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+};
 
 function HomeScreen({ navigation }) {
   const [user_id, setUser_Id] = useState(userContext._currentValue._id);
   const [clubs, setClubs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const getClubs = () => {
+    fetch(`https://blurble-project.herokuapp.com/api/users/_id=${user_id}`)
+      .then((response) => response.json())
+      .then((json) => {
+        setClubs(json.user.clubs);
+        setIsLoading(false);
+      });
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setIsLoading(true);
+    wait(2000).then(() => setRefreshing(false));
+    getClubs();
+  }, []);
 
   useEffect(() => {
     fetch(`https://blurble-project.herokuapp.com/api/users/_id=${user_id}`)
@@ -32,14 +54,14 @@ function HomeScreen({ navigation }) {
     );
   } else if (clubs.length) {
     return (
-      <ScrollView>
-        {clubs.map((item) => {
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {clubs.map((item, i) => {
           return (
-            <GroupItem
-              key={item.club_id}
-              club_id={item.club_id}
-              navigation={navigation}
-            />
+            <GroupItem key={i} club_id={item.club_id} navigation={navigation} />
           );
         })}
       </ScrollView>
@@ -64,6 +86,7 @@ export default HomeScreen;
 
 const GroupItem = (props) => {
   const { club_id, navigation } = props;
+
   const [book, setBook] = useState({
     volumeInfo: {
       title: "Untitled",
@@ -74,6 +97,7 @@ const GroupItem = (props) => {
       pageCount: 0,
     },
   });
+  const [club, setClub] = useState("");
 
   useEffect(() => {
     fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${club_id}`)
@@ -81,6 +105,7 @@ const GroupItem = (props) => {
         return response.json();
       })
       .then(({ club }) => {
+        setClub(club.clubName);
         return fetch(club.currentBook)
           .then((response) => {
             return response.json();
@@ -93,7 +118,7 @@ const GroupItem = (props) => {
 
   return (
     <Card>
-      <Card.Title>{book.volumeInfo.title}</Card.Title>
+      <Card.Title>{club}</Card.Title>
       <Card.Divider />
       <Image
         style={{
@@ -112,10 +137,13 @@ const GroupItem = (props) => {
         title="Discuss..."
         color="#58B09C"
         onPress={() => {
+          console.log(club);
           navigation.navigate("UserClub", {
-            title: book.volumeInfo.title,
+            title: club,
             thumbnail: book.volumeInfo.imageLinks.thumbnail,
             pages: book.volumeInfo.pageCount,
+            clubID: club_id,
+            book: book.selfLink,
           });
         }}
       />

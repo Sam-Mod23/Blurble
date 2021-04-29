@@ -9,12 +9,13 @@ import {
   Alert,
 } from "react-native";
 import { Card } from "react-native-elements";
+import userContext from "../userContext";
 
 function BookInfoScreen(props) {
-  [pressed, setPressed] = useState(false);
+  [hasBeenPressed, setHasBeenPressed] = useState(false);
   [nominate, setNominate] = useState("Nominate");
-  const { navigation } = props;
-  const { item } = props.route.params;
+  const { item, clubID } = props.route.params;
+  const user = userContext._currentValue._id;
 
   if (item.volumeInfo.imageLinks === undefined) {
     item.volumeInfo.imageLinks = {
@@ -38,16 +39,20 @@ function BookInfoScreen(props) {
   if (item.volumeInfo.description === undefined) {
     item.volumeInfo.description = "No Description.";
   }
-  // const sendSubmission = () => {
-  //   fetch("PATCH GROUP NOMINATED BOOKS LIST", {method: "PATCH", body: {
-  //     user id: from context,
-  //     ISBN: `${item.volumeIfo.industryIdentifiers[0].identifier}
-  //   }})
-  //  fetch("PATCH USER VOTED STATUS", {method: "PATCH", body: {
-  //  club id: from props
-  //  voted: true
-  //}})
-  // }
+
+  const sendSubmission = () => {
+    fetch(`https://blurble-project.herokuapp.com/api/clubs/_id=${clubID}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json;charset=utf-8" },
+      body: JSON.stringify({ selfLink: item.selfLink }),
+    });
+
+    fetch(`https://blurble-project.herokuapp.com/api/users/_id=${user}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json;charset=utf-8" },
+      body: JSON.stringify({ blurblesInc: 74 }),
+    });
+  };
 
   return (
     <ScrollView>
@@ -85,10 +90,9 @@ function BookInfoScreen(props) {
                   {
                     text: "Submit",
                     onPress: () => {
-                      console.log(`${item.volumeInfo.title} was nominated`);
                       setNominate("Book Nominated!");
-                      setPressed(true);
-                      // sendSubmission();
+                      setHasBeenPressed(true);
+                      sendSubmission();
                     },
                     style: "cancel",
                   },
@@ -100,7 +104,7 @@ function BookInfoScreen(props) {
             }
             title={nominate}
             color={"#58B09C"}
-            disabled={pressed}
+            disabled={hasBeenPressed}
           />
         </Card>
       </View>

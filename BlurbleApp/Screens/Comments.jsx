@@ -3,29 +3,34 @@ import { Text, View, ScrollView } from "react-native";
 import { Button, Input, Slider, Divider, Tooltip } from "react-native-elements";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
+import userContext from "../userContext";
 
 function CommentsScreen(props) {
-  const [page, setPage] = useState(0);
-  const [title, setTitle] = useState("");
-  const [subject, setSubject] = useState("");
+  const [page, setPage] = useState(1);
   const [body, setBody] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [buttonText, setButtonText] = useState(" Post Comment");
+  const { book, clubID } = props.route.params;
+
+  const createComment = () => {
+    fetch(
+      `https://blurble-project.herokuapp.com/api/comments/club_id=${clubID}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify({
+          username: userContext._currentValue.username,
+          user_id: userContext._currentValue._id,
+          body: body,
+          book: props.route.params.book,
+          progress: page,
+        }),
+      }
+    );
+  };
 
   return (
     <ScrollView style={{ paddingHorizontal: 30, paddingTop: 30 }}>
-      <Input
-        label="Title"
-        placeholder="Title..."
-        leftIcon={<Ionicons name="bookmark-outline" />}
-        onChangeText={setTitle}
-      />
-      <Input
-        label="Subject"
-        placeholder="Subject..."
-        leftIcon={<Ionicons name="bookmarks-outline" />}
-        onChangeText={setSubject}
-      />
       <Input
         label="Comment"
         placeholder="Comment goes here..."
@@ -53,7 +58,7 @@ function CommentsScreen(props) {
         buttonStyle={{ backgroundColor: "#2F2F2F" }}
         disabled={disabled}
         onPress={() => {
-          setDisabled(true), setButtonText(" Comment Posted!");
+          setDisabled(true), setButtonText(" Comment Posted!"), createComment();
         }}
       />
     </ScrollView>
