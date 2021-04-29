@@ -20,11 +20,13 @@ function HomeScreen({ navigation }) {
   const [clubs, setClubs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [location, setLocation] = useState("");
 
   const getClubs = () => {
     fetch(`https://blurble-project.herokuapp.com/api/users/_id=${user_id}`)
       .then((response) => response.json())
       .then((json) => {
+        setLocation(json.user.location);
         setClubs(json.user.clubs);
         setIsLoading(false);
       });
@@ -43,6 +45,7 @@ function HomeScreen({ navigation }) {
       .then((json) => {
         setClubs(json.user.clubs);
         setIsLoading(false);
+        setLocation(json.user.location);
       });
   }, []);
 
@@ -61,7 +64,12 @@ function HomeScreen({ navigation }) {
       >
         {clubs.map((item, i) => {
           return (
-            <GroupItem key={i} club_id={item.club_id} navigation={navigation} />
+            <GroupItem
+              location={location}
+              key={i}
+              club_id={item.club_id}
+              navigation={navigation}
+            />
           );
         })}
       </ScrollView>
@@ -85,7 +93,7 @@ function HomeScreen({ navigation }) {
 export default HomeScreen;
 
 const GroupItem = (props) => {
-  const { club_id, navigation } = props;
+  const { club_id, navigation, location } = props;
 
   const [book, setBook] = useState({
     volumeInfo: {
@@ -137,10 +145,11 @@ const GroupItem = (props) => {
         title="Discuss..."
         color="#58B09C"
         onPress={() => {
-          console.log(club);
           navigation.navigate("UserClub", {
+            location: location,
             title: club,
             thumbnail: book.volumeInfo.imageLinks.thumbnail,
+            ISBN: book.volumeInfo.industryIdentifiers[0].identifier,
             pages: book.volumeInfo.pageCount,
             clubID: club_id,
             book: book.selfLink,

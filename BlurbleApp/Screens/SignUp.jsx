@@ -38,6 +38,11 @@ const SignUpScreen = ({ navigation }) => {
         leftIcon={<Ionicons name="key-outline" />}
       />
       <Input
+        label="City"
+        placeholder="City..."
+        leftIcon={<Ionicons name="business-outline" />}
+      />
+      <Input
         label="Create Password"
         placeholder="Password..."
         leftIcon={<Ionicons name="key-outline" />}

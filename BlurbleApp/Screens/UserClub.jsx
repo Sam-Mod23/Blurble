@@ -1,5 +1,8 @@
+import { Link } from "@react-navigation/native";
+import { setStatusBarStyle } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { ActivityIndicator } from "react-native";
+import { Linking } from "react-native";
 import { View, ScrollView, Image } from "react-native";
 
 import {
@@ -15,7 +18,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 const UserClubScreen = (props) => {
   const { navigation } = props;
   const { clubID } = props.route.params;
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(15);
   const [comments, setComments] = useState({
     comments: [
       {
@@ -33,15 +36,30 @@ const UserClubScreen = (props) => {
     ],
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [APIIsLoading, setAPIIsLoading] = useState(true);
+  const [URL, setURL] = useState("https://google.com");
+
+  const getLibrary = () => {
+    fetch(
+      `https://blurble-library-api.herokuapp.com/availabilityByISBN/${props.route.params.ISBN}?service=${props.route.params.location}`
+    )
+      .then((response) => response.json())
+      .then((json) => json[0].url)
+      .then((url) => {
+        setURL(url);
+        setAPIIsLoading(false);
+      });
+  };
 
   useEffect(() => {
     fetch(
       `https://blurble-project.herokuapp.com/api/comments/club_id=${clubID}?orderBy=desc&progress=${page}`
     )
       .then((response) => response.json())
-      .then((json) => {
-        setComments(json.comments);
+      .then((json) => setComments(json.comments))
+      .then(() => {
         setIsLoading(false);
+        getLibrary();
       });
   }, [page]);
 
@@ -127,6 +145,24 @@ const UserClubScreen = (props) => {
                   paddingHorizontal: 30,
                 }}
               />
+              {APIIsLoading ? (
+                <ActivityIndicator size="small" />
+              ) : (
+                <Button
+                  icon={
+                    <Ionicons
+                      name={"compass-outline"}
+                      size={20}
+                      color="#C97064"
+                    />
+                  }
+                  onPress={() => Linking.openURL(URL)}
+                  buttonStyle={{
+                    backgroundColor: "white",
+                    paddingHorizontal: 30,
+                  }}
+                />
+              )}
             </View>
             <Slider
               value={page}

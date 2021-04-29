@@ -5,4 +5,9 @@ const userContext = React.createContext({
   username: "geocunn",
 });
 
+// const userContext = React.createContext({
+//   _id: "1",
+//   username: "geocunn",
+// });
+
 export default userContext;

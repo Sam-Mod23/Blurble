@@ -53,6 +53,7 @@ function ProfileScreen({ navigation }) {
   const list = [
     { title: "Name:", subtitle: user.name },
     { title: "Username:", subtitle: user.username },
+    { title: "Location:", subtitle: user.location },
     { title: "Email:", subtitle: user.email },
     { title: "Over 18:", subtitle: user.isOver18.toString() },
     { title: "Clubs:", subtitle: user.clubs.length },
